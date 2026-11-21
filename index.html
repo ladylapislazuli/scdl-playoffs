@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SCDL 4.5 Playoff Odds Flip Sheet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Geologica:wght@600;700;800&family=Nunito:wght@400;600;700&family=Chakra+Petch:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--paper:#e0e4d3;--paper2:#d3d9c2;--ink:#1b3225;--green:#346047;--green2:#4b7d5f;--mut:#608668;--rule:#b9c1a8;--mint:#88d599;--gold:#c98a1b;--red:#a8443a}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.35 Nunito,system-ui,sans-serif}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 20px 32px}
+header{display:flex;align-items:center;gap:18px;border-bottom:4px solid var(--green);padding-bottom:14px}
+header img{width:92px;height:92px;object-fit:contain}
+h1{font:800 48px/1 'Geologica',sans-serif;margin:2px 0 0;text-transform:uppercase;letter-spacing:-.01em;color:var(--green);text-shadow:3px 3px 0 var(--mint)}
+.kicker{font:600 15px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-top:8px}
+.lede{margin-top:6px;color:var(--ink)}
+nav{display:flex;align-items:flex-end;gap:4px;margin-top:18px;border-bottom:2px solid var(--ink)}
+.tab{display:flex;align-items:center;gap:8px;background:none;border:none;border-bottom:4px solid transparent;margin-bottom:-2px;padding:6px 14px 8px;cursor:pointer;font:800 22px 'Geologica',sans-serif;text-transform:uppercase;color:var(--mut);letter-spacing:.03em}
+.tab.on{text-shadow:-2px 2px 0 var(--mint)}
+.tab img{width:34px;height:34px;object-fit:contain;filter:grayscale(1);opacity:.55}
+.tab.on{color:var(--ink);border-bottom-color:var(--green)}
+.tab.on img{filter:none;opacity:1}
+.reset{margin-bottom:8px;background:none;border:1.5px solid var(--ink);color:var(--ink);font:600 13px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;padding:5px 10px;cursor:pointer}
+.reset:hover{background:var(--ink);color:var(--paper)}
+main{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:18px}
+@media(max-width:860px){main{grid-template-columns:1fr}h1{font-size:34px}header img{width:68px;height:68px}}
+h2{font:800 18px 'Geologica',sans-serif;text-transform:uppercase;letter-spacing:.03em;color:var(--green);margin:0 0 8px;display:flex;justify-content:space-between;align-items:baseline}
+h2 small{font:500 13px Nunito,sans-serif;letter-spacing:0;text-transform:none;color:var(--mut)}
+.rlabel{font:700 13px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--green);margin:14px 0 6px;border-top:1px solid var(--rule);padding-top:8px}
+.rlabel:first-of-type{border-top:none;padding-top:0;margin-top:0}
+.game{display:grid;grid-template-columns:1fr 26px 1fr;align-items:stretch;margin-bottom:5px}
+.pick{display:flex;align-items:center;gap:8px;border:1.5px solid var(--rule);background:#eef0e4;color:var(--ink);padding:5px 8px;cursor:pointer;font:600 15px Nunito,sans-serif;text-align:left;min-height:42px}
+.pick.r{flex-direction:row-reverse;text-align:right}
+.pick img{width:30px;height:30px;object-fit:contain;flex:none}
+.pick:hover{border-color:var(--green)}
+.pick.w{background:var(--green);border-color:var(--green);color:#fff}
+.pick.w::after{content:'W';margin-left:auto;font:800 14px 'Geologica',sans-serif;color:var(--mint);opacity:.8}
+.pick.r.w::after{margin-left:0;margin-right:auto}
+.pick.l{opacity:.4}
+.pick.l img{filter:grayscale(1)}
+.vs{align-self:center;text-align:center;font:600 12px 'Chakra Petch',sans-serif;color:var(--mut)}
+table{width:100%;border-collapse:collapse}
+th{font:600 12px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);text-align:left;padding:0 6px 6px;border-bottom:2px solid var(--ink)}
+th.n{text-align:right}
+td{padding:6px;border-bottom:1px solid var(--rule);vertical-align:middle}
+td.rk{font:800 17px 'Geologica',sans-serif;color:var(--mut);width:24px}
+td.lg{width:44px}td.lg img{width:36px;height:36px;object-fit:contain;display:block}
+td.tm{font-weight:600}
+td.rec{font:600 16px 'Chakra Petch',sans-serif;color:var(--mut);white-space:nowrap}
+td.pct{font:800 22px 'Geologica',sans-serif;color:var(--green);text-align:right;width:84px;font-variant-numeric:tabular-nums}
+.bar{height:4px;background:var(--paper2);margin-top:4px}
+.bar i{display:block;height:100%;background:var(--green2)}
+tr.out td{color:var(--mut)} tr.out td.lg img{filter:grayscale(1);opacity:.5}
+.tag{font:700 11px 'Chakra Petch',sans-serif;letter-spacing:.03em;padding:1px 5px;margin-left:6px;vertical-align:2px}
+.tag.c{background:var(--gold);color:#fff}
+.tag.e{background:var(--red);color:#fff}
+tr.line td{padding:0;border-bottom:none}
+.cut{display:flex;align-items:center;gap:8px;font:700 11px 'Chakra Petch',sans-serif;letter-spacing:.03em;color:var(--gold);margin:2px 0}
+.cut::before,.cut::after{content:'';flex:1;border-top:2px dashed var(--gold)}
+.tb{margin-top:22px;border-top:2px solid var(--ink);padding-top:10px}
+.tb h3{font:800 16px 'Geologica',sans-serif;text-transform:uppercase;letter-spacing:.03em;color:var(--green);margin:0 0 8px}
+.tie{background:#eef0e4;border-left:4px solid var(--green2);padding:8px 12px;margin-bottom:8px}
+.tie.hot{border-left-color:var(--gold)}
+.tie .hd{font:700 13px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
+.tie .hd b{color:var(--gold)}
+.tie ol{margin:4px 0 0;padding-left:18px}
+.tie li{margin:2px 0}
+.tie .res{font-weight:600;margin-top:4px}
+.tb .empty{color:var(--mut);font-size:14px}
+.ann{list-style:none;margin:8px 0 4px -18px;background:var(--ink);color:var(--paper);padding:10px 12px}
+.ann .ah{font:800 14px 'Geologica',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--mint);margin-bottom:6px}
+.ann ol{margin:0;padding-left:18px}.ann b{color:#fff}
+.ann .small{font-size:12px;opacity:.7;margin-top:6px}
+.links{display:flex;gap:16px;margin-top:8px}
+.links a{font:600 13px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--green);text-decoration:none;border-bottom:2px solid var(--mint)}
+.links a:hover{color:var(--ink);border-bottom-color:var(--green)}
+.modal{display:none;position:fixed;inset:0;background:rgba(20,30,24,.75);z-index:9;align-items:center;justify-content:center;padding:20px}
+.modal.on{display:flex}
+.mbox{background:var(--paper);max-width:560px;width:100%;max-height:100%;overflow:auto;padding:14px;border:2px solid var(--ink)}
+.mhd{display:flex;justify-content:space-between;align-items:center;font:800 18px 'Geologica',sans-serif;color:var(--green);text-transform:uppercase;margin-bottom:10px}
+.mhd .reset,.mfoot .reset{margin:0}
+#mimg{width:100%;display:block;border:1px solid var(--rule)}
+.mfoot{display:flex;gap:12px;align-items:center;margin-top:10px;font-size:13px;color:var(--mut)}
+.mfoot a{text-decoration:none}
+footer{margin-top:28px;background:var(--ink);color:#e6e6b2;padding:18px 22px 20px;display:grid;grid-template-columns:170px 1fr;gap:20px;align-items:start}
+footer h3{margin:0;font:800 22px/1 'Geologica',sans-serif;color:var(--mint);text-transform:uppercase}
+footer .mcols{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
+footer .mcols>div{padding:0 16px;border-left:2px solid var(--green)}
+footer b{display:block;font:700 14px 'Chakra Petch',sans-serif;text-transform:uppercase;letter-spacing:.03em;color:#fff;margin-bottom:4px}
+footer p{margin:0;font-size:14px;line-height:1.45}
+footer a{color:var(--mint)}
+@media(max-width:860px){footer{grid-template-columns:1fr}footer .mcols{grid-template-columns:1fr;gap:12px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <img src="scdl.png" alt="SCDL">
+  <div>
+    <h1>Playoff Race</h1>
+    <div class="kicker">Scuttle Crab Draft League · Season 4.5 River Rush</div>
+    <div class="lede">Four rounds left on 11/22. Top 4 in each division make it. Pick the winners and see who gets in.</div>
+    <div class="links"><a href="https://docs.google.com/spreadsheets/d/1tdi8ftaQ50sYS92H39YybU29SIPGVSyRNeT_HdOHP8A/edit" target="_blank" rel="noopener">SCDL 4.5 Master Sheet ↗</a><a href="https://docs.google.com/document/d/1oNI0IaDrYB0lQTchahtCT3GR6kcnfoc8l-ZicX9hh78/edit" target="_blank" rel="noopener">Rulebook ↗</a></div>
+  </div>
+</header>
+<nav>
+  <button class="tab on" data-d="Baron"><img src="baron.png" alt="">Baron</button>
+  <button class="tab" data-d="Dragon"><img src="dragon.png" alt="">Dragon</button>
+  <button class="reset" id="png" style="margin-left:auto">Save as PNG</button><button class="reset" id="reset" style="margin-left:8px">Clear picks</button>
+</nav>
+<main>
+  <section><h2>Remaining games <small id="count"></small></h2><div id="games"></div></section>
+  <section><h2>Playoff odds</h2><div id="odds"></div><div class="tb" id="ties"></div></section>
+</main>
+<div class="modal" id="modal"><div class="mbox"><div class="mhd"><span>Your picks</span><button class="reset" id="mclose">Close</button></div><img id="mimg" alt="Playoff picks"><div class="mfoot"><a id="mdl" class="reset" download="scdl-playoff-picks.png">Download</a><span>Or right-click the image → Copy / Save image.</span></div></div></div>
+<footer>
+  <h3>Methodology</h3>
+  <div class="mcols">
+    <div><b>Unpicked games</b><p>Every game you haven't picked counts as 50/50. The odds cover every possible result.</p></div>
+    <div><b>Ties</b><p>Broken by head-to-head per <a href="https://docs.google.com/document/d/1oNI0IaDrYB0lQTchahtCT3GR6kcnfoc8l-ZicX9hh78/edit" target="_blank" rel="noopener">Rule 4.4</a>, restarting with whoever's still tied.</p></div>
+    <div><b>Tiebreaker matches</b><p>If head-to-head can't separate teams, they play tiebreaker matches. The odds treat each one as 50/50.</p></div>
+  </div>
+</footer>
+</div>
+<script>
+
+const DIV={
+Baron:{played:[['Chickens','Mud Newts'],['Catboys','Gunkers'],['Ghoulblins','Bandits'],['Checkmates','Miners'],['Chickens','Gunkers'],['Ghoulblins','Mud Newts'],['Miners','Catboys'],['Checkmates','Bandits'],['Ghoulblins','Chickens'],['Miners','Gunkers'],['Mud Newts','Checkmates'],['Bandits','Catboys']],
+ rounds:[[['Miners','Chickens'],['Checkmates','Ghoulblins'],['Gunkers','Bandits'],['Mud Newts','Catboys']],[['Chickens','Checkmates'],['Bandits','Miners'],['Ghoulblins','Catboys'],['Gunkers','Mud Newts']],[['Chickens','Bandits'],['Catboys','Checkmates'],['Miners','Mud Newts'],['Ghoulblins','Gunkers']],[['Chickens','Catboys'],['Mud Newts','Bandits'],['Checkmates','Gunkers'],['Miners','Ghoulblins']]]},
+Dragon:{played:[['Duck Donuts','Breadwinners'],['Bandle City','Milkshakes'],['Chudmates','Milk'],['Globetrotters','Ticks'],['Duck Donuts','Ticks'],['Bandle City','Globetrotters'],['Milkshakes','Chudmates'],['Breadwinners','Milk'],['Duck Donuts','Milkshakes'],['Globetrotters','Milk'],['Bandle City','Ticks'],['Chudmates','Breadwinners']],
+ rounds:[[['Bandle City','Chudmates'],['Ticks','Milkshakes'],['Milk','Duck Donuts'],['Globetrotters','Breadwinners']],[['Milkshakes','Breadwinners'],['Bandle City','Milk'],['Ticks','Chudmates'],['Globetrotters','Duck Donuts']],[['Duck Donuts','Bandle City'],['Breadwinners','Ticks'],['Milkshakes','Milk'],['Chudmates','Globetrotters']],[['Breadwinners','Bandle City'],['Milkshakes','Globetrotters'],['Chudmates','Duck Donuts'],['Milk','Ticks']]]}
+};
+const picks={Baron:{},Dragon:{}}; // key "r-g" -> 0|1 (index of winner)
+let cur='Baron';
+try{const s=JSON.parse(localStorage.getItem('scdl45flip')||'null');if(s){picks.Baron=s.Baron||{};picks.Dragon=s.Dragon||{};}}catch(e){}
+function save(){try{localStorage.setItem('scdl45flip',JSON.stringify(picks))}catch(e){}}
+
+// tie group -> array of [team, prob it lands at each slot] returned as map team->array(n)
+function rankProbs(teams,beat){
+  const n=teams.length;
+  if(n===1) return {[teams[0]]:[1]};
+  const h={};for(const t of teams){let c=0;for(const o of teams) if(o!==t&&beat.has(t+'>'+o))c++;h[t]=c;}
+  const vals=[...new Set(Object.values(h))].sort((a,b)=>b-a);
+  const out={};
+  if(vals.length===1){for(const t of teams) out[t]=Array(n).fill(1/n);return out;}
+  let off=0;
+  for(const v of vals){
+    const g=teams.filter(t=>h[t]===v);const sub=rankProbs(g,beat);
+    for(const t of g){const a=Array(n).fill(0);sub[t].forEach((p,i)=>a[i+off]=p);out[t]=a;}
+    off+=g.length;
+  }
+  return out;
+}
+
+function compute(d){
+  const D=DIV[d];
+  const teams=[...new Set(D.played.flat().concat(D.rounds.flat(2)))];
+  const baseW={};teams.forEach(t=>baseW[t]=0);
+  const beat0=new Set(D.played.map(([w,l])=>w+'>'+l));
+  D.played.forEach(([w])=>baseW[w]++);
+  const open=[];
+  D.rounds.forEach((r,ri)=>r.forEach((g,gi)=>{
+    const p=picks[d][ri+'-'+gi];
+    if(p===undefined) open.push(g); else {const w=g[p],l=g[1-p];beat0.add(w+'>'+l);baseW[w]++;}
+  }));
+  const N=1<<open.length;
+  const make={},seed={};teams.forEach(t=>{make[t]=0;seed[t]=0;});
+  for(let bits=0;bits<N;bits++){
+    const beat=new Set(beat0);const w={...baseW};
+    for(let i=0;i<open.length;i++){const [a,b]=open[i];const win=(bits>>i)&1?a:b,lose=win===a?b:a;beat.add(win+'>'+lose);w[win]++;}
+    const levels=[...new Set(teams.map(t=>w[t]))].sort((a,b)=>b-a);
+    let off=0;
+    for(const lv of levels){
+      const g=teams.filter(t=>w[t]===lv);
+      const rp=rankProbs(g,beat);
+      for(const t of g){let s=0,e=0;rp[t].forEach((q,i)=>{if(i+off<4)s+=q;e+=q*(i+off);});make[t]+=s;seed[t]+=e;}
+      off+=g.length;
+    }
+  }
+  const curW={...baseW};
+  return teams.map(t=>({t,p:make[t]/N,s:seed[t]/N,w:curW[t],l:3+D.rounds.length-curW[t]-open.filter(g=>g.includes(t)).length})).sort((a,b)=>b.p-a.p||a.s-b.s);
+}
+
+const slug=t=>''+t.toLowerCase().replace(/ /g,'-')+'.png';
+const L=t=>`<img src="${slug(t)}" alt="" loading="lazy">`;
+function renderGames(){
+  const D=DIV[cur];let html='';
+  D.rounds.forEach((r,ri)=>{
+    html+=`<div class="rlabel">Round ${ri+4}</div>`;
+    r.forEach((g,gi)=>{
+      const p=picks[cur][ri+'-'+gi];
+      const cls=i=>p===undefined?'':(p===i?'w':'l');
+      html+=`<div class="game"><button class="pick ${cls(0)}" data-k="${ri}-${gi}" data-i="0">${L(g[0])}<span>${g[0]}</span></button><span class="vs">VS</span><button class="pick r ${cls(1)}" data-k="${ri}-${gi}" data-i="1">${L(g[1])}<span>${g[1]}</span></button></div>`;
+    });
+  });
+  document.getElementById('games').innerHTML=html;
+  document.getElementById('count').textContent=Object.keys(picks[cur]).length+' / 16 picked';
+  document.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
+    const k=b.dataset.k,i=+b.dataset.i;
+    if(picks[cur][k]===i) delete picks[cur][k]; else picks[cur][k]=i;
+    save();render();
+  });
+}
+function fmt(p){const v=p*100;if(p===1)return'100%';if(p===0)return'0%';if(v>=99.5)return'>99%';if(v<0.5)return'<1%';return Math.round(v)+'%';}
+function renderOdds(){
+  const rows=compute(cur);
+  let html='<table><tr><th></th><th></th><th>Team</th><th>Rec</th><th class="n">Odds</th></tr>';
+  rows.forEach((r,i)=>{
+    const tag=r.p===1?'<span class="tag c">IN</span>':r.p===0?'<span class="tag e">OUT</span>':'';
+    html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct">${fmt(r.p)}</td></tr>`;
+    if(i===3) html+='<tr class="line"><td colspan="5"><div class="cut">PLAYOFF LINE</div></td></tr>';
+  });
+  document.getElementById('odds').innerHTML=html+'</table>';
+}
+function finalState(d){
+  const D=DIV[d];const w={},beat=new Set(D.played.map(([a,b])=>a+'>'+b));let open=0;
+  const teams=[...new Set(D.played.flat().concat(D.rounds.flat(2)))];teams.forEach(t=>w[t]=0);
+  D.played.forEach(([a])=>w[a]++);
+  D.rounds.forEach((r,ri)=>r.forEach((g,gi)=>{const p=picks[d][ri+'-'+gi];if(p===undefined){open++;return;}beat.add(g[p]+'>'+g[1-p]);w[g[p]]++;}));
+  return {teams,w,beat,open};
+}
+// explain resolution of a tied group occupying seeds start..start+n-1
+// avg win time (seconds) from Rounds 1-3 match history
+const WIN_TIMES={
+ 'Catboys':[2074],'Ghoulblins':[2369,1843,1705],'Chickens':[2728,1869],'Checkmates':[1739,1935],'Miners':[1899,2343],'Bandits':[1990],'Mud Newts':[2185],'Gunkers':[],
+ 'Bandle City':[1904,1774,1642],'Duck Donuts':[1563,1822,1603],'Chudmates':[1931,2051],'Globetrotters':[1529,1557],'Breadwinners':[1789],'Milkshakes':[1834],'Milk':[],'Ticks':[]
+};
+const avgWT=t=>{const a=WIN_TIMES[t]||[];return a.length?a.reduce((x,y)=>x+y,0)/a.length:Infinity;};
+const mmss=s=>s===Infinity?'no wins yet':`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+function tbMatches(g0,start){
+  const g=[...g0].sort((a,b)=>avgWT(a)-avgWT(b));
+  const n=g.length,spots=Math.max(0,Math.min(4,start+n)-start),seeds=`seeds ${start+1}–${start+n}`;
+  const order=`<div class="small" style="opacity:.85;margin:0 0 6px">Projected seeding by average win time, lowest first: ${g.map((t,i)=>`${i+1}. ${t} (${mmss(avgWT(t))})`).join(' · ')}</div>`;
+  const [A,B,C,D]=g;let m;
+  if(spots===0||spots===n){
+    m=n===2?`<div><b>${A}</b> vs <b>${B}</b> (Bo1): winner takes seed ${start+1}. Both are ${spots?'in':'out'} either way.</div>`
+           :`<div>Bo1s decide ${seeds} only. Everyone here is ${spots?'in':'out'} either way.</div>`;
+  } else if(n===2){
+    m=`<div><b>${A}</b> vs <b>${B}</b> (Bo1): winner takes the last playoff spot.</div>`;
+  } else if(n===3&&spots===2){
+    m=`<ol><li><b>${B}</b> vs <b>${C}</b> (Bo1). The winner is <b>in</b>.</li><li>The loser plays <b>${A}</b>. The winner takes the <b>last spot</b>.</li></ol>`;
+  } else if(n===3&&spots===1){
+    m=`<ol><li><b>${A}</b> gets the bye.</li><li><b>${B}</b> vs <b>${C}</b> (Bo1).</li><li>The winner plays <b>${A}</b>, and that winner takes the <b>last spot</b>.</li></ol>`;
+  } else if(n===4&&spots===2){
+    m=`<ol><li><b>${A}</b> vs <b>${D}</b> (Bo1). The winner is <b>in</b>.</li><li><b>${B}</b> vs <b>${C}</b> (Bo1). The winner is <b>in</b>.</li></ol>`;
+  } else if(n===4&&spots===1){
+    m=`<ol><li>Semis: <b>${A}</b> vs <b>${D}</b>, <b>${B}</b> vs <b>${C}</b> (Bo1s).</li><li>The winners play a Bo1 final for the <b>last spot</b>.</li></ol>`;
+  } else {
+    m=`<div>${n} teams for ${spots} spot${spots>1?'s':''}. Staff sets the bracket.</div>`;
+  }
+  const foot='<div class="small"><b style="color:var(--mint)">Not final.</b> Average win time decides who gets the better spot, like the bye. These times only cover Rounds 1–3, and the 11/22 games will change them, so the seeding is not locked until the regular season ends. Side selection is a coin flip each game. Played before playoffs.</div>';
+  return `<li class="ann"><div class="ah">Tiebreaker matches${spots>0&&spots<n?` · ${spots} playoff spot${spots>1?'s':''} on the line`:''}</div>${order}${m}${foot}</li>`;
+}
+function explain(group,beat,depth,start){
+  const out=[];
+  if(group.length===1) return out;
+  if(group.length===2){
+    const [a,b]=group;const win=beat.has(a+'>'+b)?a:b,lose=win===a?b:a;
+    out.push(`<li>${depth?'Restart with ':''}<b>${win}</b> vs <b>${lose}</b>: ${win} won head-to-head, so ${win} ranks ahead.</li>`);
+    return out;
+  }
+  const h={};group.forEach(t=>h[t]=group.filter(o=>o!==t&&beat.has(t+'>'+o)).length);
+  const n=group.length-1;
+  const recs=[...group].sort((x,y)=>h[y]-h[x]).map(t=>`${t} ${h[t]}-${n-h[t]}`).join(', ');
+  const vals=[...new Set(Object.values(h))].sort((a,b)=>b-a);
+  out.push(`<li>${depth?'Restart with the teams still tied. ':''}Head-to-head among ${group.join(', ')}: ${recs}.</li>`);
+  if(vals.length===1){
+    out.push(`<li>Still tied. Game win % (steps 2 and 3) can't separate them since every game is a Bo1, so this goes to <b>tiebreaker matches</b>.</li>`);
+    out.push(tbMatches(group,start));
+    return out;
+  }
+  let off=start;
+  for(const v of vals){const g=group.filter(t=>h[t]===v);if(g.length>1) out.push(...explain(g,beat,depth+1,off));off+=g.length;}
+  return out;
+}
+function renderTies(){
+  const el=document.getElementById('ties');
+  const {teams,w,beat,open}=finalState(cur);
+  if(open){el.innerHTML=`<h3>Tiebreakers</h3><div class="empty">Pick all 16 games to see how ties get broken.</div>`;return;}
+  const sorted=[...teams].sort((a,b)=>w[b]-w[a]);
+  let html='<h3>Tiebreakers</h3>',any=false,start=0;
+  const levels=[...new Set(sorted.map(t=>w[t]))];
+  for(const lv of levels){
+    const g=sorted.filter(t=>w[t]===lv);const end=start+g.length;
+    if(g.length>1){
+      any=true;const hot=start<4&&end>4;
+      html+=`<div class="tie ${hot?'hot':''}"><div class="hd">${g.length}-way tie at ${lv}-${7-lv} · seeds ${start+1}–${end}${hot?' · <b>decides the playoff line</b>':''}</div><ol>${explain(g,beat,0,start).join('')}</ol></div>`;
+    }
+    start=end;
+  }
+  if(!any) html+='<div class="empty">No ties. Standings are set by record.</div>';
+  el.innerHTML=html;
+}
+function render(){renderGames();renderOdds();renderTies();}
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=b.dataset.d;render();});
+document.getElementById('reset').onclick=()=>{picks[cur]={};save();render();};
+
+// ---------- PNG export (canvas) ----------
+const imgCache={};
+function loadImg(src){return imgCache[src]||(imgCache[src]=new Promise(r=>{const i=new Image();i.onload=()=>r(i);i.onerror=()=>r(null);i.src=src;}));}
+function fitImg(ctx,img,x,y,s,gray){if(!img)return;const k=Math.min(s/img.width,s/img.height),w=img.width*k,h=img.height*k;ctx.save();if(gray){ctx.filter='grayscale(1)';ctx.globalAlpha=.45;}ctx.drawImage(img,x+(s-w)/2,y+(s-h)/2,w,h);ctx.restore();}
+function tieLines(d){
+  const {teams,w,beat,open}=finalState(d);if(open) return [];
+  const out=[];const sorted=[...teams].sort((a,b)=>w[b]-w[a]);let start=0;
+  for(const lv of [...new Set(sorted.map(t=>w[t]))]){
+    const g=sorted.filter(t=>w[t]===lv),end=start+g.length;
+    if(g.length>1&&start<4&&end>4){
+      const h={};g.forEach(t=>h[t]=g.filter(o=>o!==t&&beat.has(t+'>'+o)).length);
+      const unres=new Set(Object.values(h)).size===1&&g.length>2;
+      out.push(`${g.length}-way tie at ${lv}-${7-lv}: ${unres?`tiebreaker matches for ${4-start} spot${4-start>1?'s':''}`:'decided by head-to-head'}`);
+    }
+    start=end;
+  }
+  return out;
+}
+async function exportPNG(){
+  try{await Promise.all(["800 40px Geologica","400 20px Nunito","700 20px Nunito","600 20px 'Chakra Petch'","700 20px 'Chakra Petch'"].map(f=>document.fonts.load(f)));}catch(e){}
+  const d=cur,D=DIV[d],rows=compute(d),fs=finalState(d);
+  const W=1080,H=1350,c=document.createElement('canvas');c.width=W;c.height=H;const x=c.getContext('2d');
+  const C={paper:'#e0e4d3',ink:'#1b3225',green:'#346047',deep:'#1b3225',mint:'#88d599',mut:'#608668',rule:'#c4cbb4',gold:'#d99a22',red:'#a8443a',card:'#ecefe2'};
+  const R=f=>`800 ${f} Geologica, sans-serif`,S=f=>`${f} Nunito, sans-serif`,K=f=>`${f} 'Chakra Petch', sans-serif`;
+  const slant=(X,Y,w,h,k)=>{x.beginPath();x.moveTo(X+k,Y);x.lineTo(X+w,Y);x.lineTo(X+w-k,Y+h);x.lineTo(X,Y+h);x.closePath();};
+  const shadowText=(t,X,Y,col,sh,off)=>{x.fillStyle=sh;x.fillText(t,X+off,Y+off);x.fillStyle=col;x.fillText(t,X,Y);};
+  x.fillStyle=C.paper;x.fillRect(0,0,W,H);
+  const [scdl,divlogo]=await Promise.all([loadImg('scdl.png'),loadImg(''+d.toLowerCase()+'.png')]);
+  const logos={};await Promise.all(rows.map(async r=>logos[r.t]=await loadImg(slug(r.t))));
+  // header
+  fitImg(x,scdl,56,44,120);
+  x.font=R('80px');shadowText('PLAYOFF',196,124,C.green,C.mint,4);
+  shadowText('PICTURE',196,206,C.green,C.mint,4);
+  x.font=K('700 24px');x.fillStyle=C.mut;x.fillText(`SEASON 4.5 · ${d.toUpperCase()} DIVISION`,200,256);
+  x.save();x.globalAlpha=.95;fitImg(x,divlogo,W-250,40,200);x.restore();
+  // rows
+  let y=300;const X0=56,RW=W-112,RH=96;
+  // tie info at the cut
+  let cutLabel='PLAYOFF LINE';
+  if(!fs.open){const sorted=[...fs.teams].sort((a,b)=>fs.w[b]-fs.w[a]);let st=0;
+    for(const lv of [...new Set(sorted.map(t=>fs.w[t]))]){const g=sorted.filter(t=>fs.w[t]===lv),en=st+g.length;
+      if(g.length>2&&st<4&&en>4){const h={};g.forEach(t=>h[t]=g.filter(o=>o!==t&&fs.beat.has(t+'>'+o)).length);
+        if(new Set(Object.values(h)).size===1) cutLabel=`${g.length}-WAY TIE · TIEBREAKER MATCHES`;}
+      st=en;}}
+  rows.forEach((r,i)=>{
+    const inZone=i<4,out=r.p===0;
+    slant(X0,y,RW,RH-10,22);x.fillStyle=inZone?C.green:C.card;x.fill();
+    // rank block
+    slant(X0,y,92,RH-10,22);x.fillStyle=inZone?C.deep:C.rule;x.fill();
+    x.font=R('40px');x.textAlign='center';x.fillStyle=inZone?C.mint:C.mut;x.fillText(String(i+1),X0+46,y+59);x.textAlign='left';
+    fitImg(x,logos[r.t],X0+104,y+6,74,out);
+    x.font=R('34px');x.fillStyle=inZone?'#fff':(out?C.mut:C.ink);x.fillText(r.t.toUpperCase(),X0+196,y+52);
+    x.font=K('600 20px');x.fillStyle=inZone?C.mint:C.mut;x.fillText(`${r.w}-${r.l}`,X0+198,y+78);
+    x.textAlign='right';
+    if(r.p===1){x.font=R('44px');x.fillStyle='#ffcc00';x.fillText('IN',X0+RW-40,y+62);}
+    else if(out){x.font=R('44px');x.fillStyle=C.red;x.fillText('OUT',X0+RW-40,y+62);}
+    else{x.font=R('48px');x.fillStyle=inZone?'#fff':C.ink;x.fillText(fmt(r.p),X0+RW-40,y+64);}
+    x.textAlign='left';
+    y+=RH;
+    if(i===3){
+      x.font=K('700 18px');const tw=x.measureText(cutLabel).width;
+      x.strokeStyle=C.gold;x.lineWidth=3;x.setLineDash([12,8]);x.beginPath();x.moveTo(X0,y+8);x.lineTo(X0+RW,y+8);x.stroke();x.setLineDash([]);
+      x.fillStyle=C.paper;x.fillRect(W/2-tw/2-14,y-6,tw+28,28);x.fillStyle=C.gold;x.textAlign='center';x.fillText(cutLabel,W/2,y+15);x.textAlign='left';
+      y+=30;
+    }
+  });
+  // picks strip
+  y+=14;
+  x.font=R('24px');x.fillStyle=C.green;x.fillText('MY PICKS',X0,y+22);
+  x.font=S('600 16px');x.fillStyle=C.mut;x.fillText('Round winners',X0+150,y+21);
+  y+=40;const colW=RW/4;
+  for(let ri=0;ri<D.rounds.length;ri++){
+    const cx=X0+ri*colW;
+    x.font=K('700 17px');x.fillStyle=C.green;x.fillText(`ROUND ${ri+4}`,cx,y+14);
+    D.rounds[ri].forEach((g,gi)=>{
+      const p=picks[d][ri+'-'+gi],bx=cx+gi*58,by=y+26;
+      x.fillStyle=p===undefined?C.card:'#fff';x.fillRect(bx,by,52,52);
+      if(p===undefined){x.font=R('26px');x.fillStyle=C.rule;x.textAlign='center';x.fillText('?',bx+26,by+36);x.textAlign='left';}
+      else fitImg(x,logos[g[p]],bx+4,by+4,44);
+    });
+  }
+  // footer
+  x.fillStyle=C.green;x.fillRect(0,H-56,W,56);
+  x.font=K('600 18px');x.fillStyle=C.mint;
+  const n=Object.keys(picks[d]).length;
+  x.fillText(n<16?`${n}/16 picked · rest count as 50/50`:'All 16 games picked',X0,H-21);
+  x.textAlign='right';x.fillStyle='#fff';x.fillText('SCUTTLE CRAB DRAFT LEAGUE',W-X0,H-21);x.textAlign='left';
+  const url=c.toDataURL('image/png');
+  document.getElementById('mimg').src=url;document.getElementById('mdl').href=url;
+  document.getElementById('mdl').download=`scdl-${d.toLowerCase()}-playoff-picks.png`;
+  document.getElementById('modal').classList.add('on');
+}
+document.getElementById('png').onclick=()=>{exportPNG().catch(e=>console.error(e));};
+document.getElementById('mclose').onclick=()=>document.getElementById('modal').classList.remove('on');
+document.getElementById('modal').onclick=e=>{if(e.target.id==='modal')e.target.classList.remove('on');};
+render();
+</script>
+</body>
+</html>

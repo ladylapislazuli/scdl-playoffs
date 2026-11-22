@@ -255,6 +255,7 @@ function renderGames(){
   });
 }
 function fmt(p){const v=p*100;if(p===1)return'100%';if(p===0)return'0%';if(v>=99.5)return'>99%';if(v<0.5)return'<1%';return Math.round(v)+'%';}
+function oddsColor(p){const A=[[168,68,58],[201,138,27],[52,96,71]];const t=p<.5?p*2:(p-.5)*2,a=p<.5?A[0]:A[1],b=p<.5?A[1]:A[2];return `rgb(${a.map((v,i)=>Math.round(v+(b[i]-v)*t)).join(',')})`;}
 function renderOdds(){
   const rows=compute(cur);
   let base=null;if(hover){const h=hover;hover=null;base={};compute(cur).forEach(r=>base[r.t]=r.p);hover=h;}
@@ -262,7 +263,7 @@ function renderOdds(){
   let html='<table><tr><th></th><th></th><th>Team</th><th class="c">Record</th><th class="n">Odds</th><th></th></tr>';
   rows.forEach((r,i)=>{
     const tag=r.p===1?'<span class="tag c">IN</span>':r.p===0?'<span class="tag e">OUT</span>':'';
-    html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct">${fmt(r.p)}</td><td class="dlt">${dl(r.t)}</td></tr>`;
+    html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%;background:${oddsColor(r.p)}"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct" style="color:${oddsColor(r.p)}">${fmt(r.p)}</td><td class="dlt">${dl(r.t)}</td></tr>`;
     if(i===3) html+='<tr class="line"><td colspan="6"><div class="cut">PLAYOFF LINE</div></td></tr>';
   });
   document.getElementById('odds').innerHTML=html+'</table>';

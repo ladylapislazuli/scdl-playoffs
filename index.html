@@ -10,7 +10,9 @@
 :root{--paper:#e0e4d3;--paper2:#d3d9c2;--ink:#1b3225;--green:#346047;--green2:#4b7d5f;--mut:#608668;--rule:#b9c1a8;--mint:#88d599;--gold:#c98a1b;--red:#a8443a}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.35 Nunito,system-ui,sans-serif}
-.wrap{max-width:1080px;margin:0 auto;padding:20px 20px 32px}
+.wrap{max-width:1200px;margin:0 auto;padding:20px 20px 32px}
+@media(min-width:1700px){.wrap{zoom:1.2}}
+@media(min-width:2300px){.wrap{zoom:1.45}}
 header{display:flex;align-items:center;gap:18px;border-bottom:4px solid var(--green);padding-bottom:14px}
 header img{width:92px;height:92px;object-fit:contain}
 h1{font:800 48px/1 'Geologica',sans-serif;margin:2px 0 0;text-transform:uppercase;letter-spacing:-.01em;color:var(--green);text-shadow:3px 3px 0 var(--mint)}
@@ -35,10 +37,20 @@ h2 small{font:500 13px Nunito,sans-serif;letter-spacing:0;text-transform:none;co
 .pick.r{flex-direction:row-reverse;text-align:right}
 .pick img{width:30px;height:30px;object-fit:contain;flex:none}
 .pick:hover{border-color:var(--green)}
+.pick::after{content:'';margin-left:auto;width:16px;height:16px;border:2px solid var(--rule);border-radius:50%;flex:none}
+.pick.r::after{margin-left:0;margin-right:auto}
+.pick:hover::after{border-color:var(--green)}
+.pick.l::after{display:none}
 .pick.w{background:var(--green);border-color:var(--green);color:#fff}
-.pick.w::after{content:'W';margin-left:auto;font:800 14px 'Geologica',sans-serif;color:var(--mint);opacity:.8}
+.pick.w::after{content:'W';margin-left:auto;font:800 14px 'Geologica',sans-serif;color:var(--mint);opacity:.8;border:none;width:auto;height:auto;border-radius:0}
 .pick.r.w::after{margin-left:0;margin-right:auto}
 .pick.l{opacity:.4}
+.pick.hov{background:#d6ead9;border-color:var(--green)}
+.pick.hov::after{border-color:var(--green);background:var(--mint)}
+.pick.l.hov{opacity:1}
+.dl{font:700 13px 'Chakra Petch',sans-serif;margin-right:6px;vertical-align:4px}
+.dl.up{color:var(--green2)}
+.dl.dn{color:var(--red)}
 .pick.l img{filter:grayscale(1)}
 .vs{align-self:center;text-align:center;font:600 12px 'Chakra Petch',sans-serif;color:var(--mut)}
 table{width:100%;border-collapse:collapse}
@@ -86,6 +98,8 @@ tr.line td{padding:0;border-bottom:none}
 #mimg{width:100%;display:block;border:1px solid var(--rule)}
 .mfoot{display:flex;gap:12px;align-items:center;margin-top:10px;font-size:13px;color:var(--mut)}
 .mfoot a{text-decoration:none}
+.howto{background:#eef0e4;border-left:4px solid var(--mint);padding:8px 12px;margin:0 0 14px;font-size:14px}
+.howto b{color:var(--green)}
 footer{margin-top:28px;background:var(--ink);color:#e6e6b2;padding:18px 22px 20px;display:grid;grid-template-columns:170px 1fr;gap:20px;align-items:start}
 footer h3{margin:0;font:800 22px/1 'Geologica',sans-serif;color:var(--mint);text-transform:uppercase}
 footer .mcols{display:grid;grid-template-columns:repeat(3,1fr);gap:0}
@@ -113,7 +127,7 @@ footer a{color:var(--mint)}
   <button class="reset" id="png" style="margin-left:auto">Download as PNG</button><button class="reset" id="reset" style="margin-left:8px">Clear picks</button>
 </nav>
 <main>
-  <section><h2>11/22 games <small id="count"></small></h2><div id="games"></div></section>
+  <section><h2>11/22 games <small id="count"></small></h2><div class="howto"><b>Click a team to pick them as the winner.</b> The odds on the right update as you go. Click again to undo.</div><div id="games"></div></section>
   <section><h2>Playoff odds</h2><div id="odds"></div><div class="tb" id="ties"></div></section>
 </main>
 <div class="modal" id="modal"><div class="mbox"><div class="mhd"><span>Your picks</span><button class="reset" id="mclose">Close</button></div><img id="mimg" alt="Playoff picks"><div class="mfoot"><a id="mdl" class="reset" download="scdl-playoff-picks.png">Download</a><span>Or right-click it to copy or save.</span></div></div></div>
@@ -145,19 +159,21 @@ const GAME_TIMES={"Catboys>Gunkers":2074,"Ghoulblins>Bandits":2369,"Chickens>Mud
 const mmss=s=>`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
 // avg win time per team over its wins vs the other tied teams; null if any of those games has no time yet
 function winTimes(teams,beat){
+  const has=typeof beat==='function'?beat:(a,b)=>beat.has(a+'>'+b);
   const out={};
-  for(const t of teams){const ts=[];for(const o of teams){if(o!==t&&beat.has(t+'>'+o)){const v=GAME_TIMES[t+'>'+o];if(v===undefined)return null;ts.push(v);}}
+  for(const t of teams){const ts=[];for(const o of teams){if(o!==t&&has(t,o)){const v=GAME_TIMES[t+'>'+o];if(v===undefined)return null;ts.push(v);}}
     out[t]=ts.length?ts.reduce((a,b)=>a+b,0)/ts.length:Infinity;}
   return out;
 }
 function rankProbs(teams,beat){
   const n=teams.length;
   if(n===1) return {[teams[0]]:[1]};
-  const h={};for(const t of teams){let c=0;for(const o of teams) if(o!==t&&beat.has(t+'>'+o))c++;h[t]=c;}
+  const has=typeof beat==='function'?beat:(a,b)=>beat.has(a+'>'+b);
+  const h={};for(const t of teams){let c=0;for(const o of teams) if(o!==t&&has(t,o))c++;h[t]=c;}
   const vals=[...new Set(Object.values(h))].sort((a,b)=>b-a);
   const out={};
   if(vals.length===1){
-    const wt=winTimes(teams,beat);
+    const wt=winTimes(teams,has);
     if(wt){ // all head-to-head win times known: order by fastest average win
       const tv=[...new Set(teams.map(t=>wt[t]))].sort((a,b)=>a-b);let o=0;
       for(const v of tv){const g=teams.filter(t=>wt[t]===v);for(const t of g){out[t]=Array(n).fill(0);for(let i=0;i<g.length;i++)out[t][o+i]=1/g.length;}o+=g.length;}
@@ -167,14 +183,18 @@ function rankProbs(teams,beat){
   }
   let off=0;
   for(const v of vals){
-    const g=teams.filter(t=>h[t]===v);const sub=rankProbs(g,beat);
+    const g=teams.filter(t=>h[t]===v);const sub=rankProbs(g,has);
     for(const t of g){const a=Array(n).fill(0);sub[t].forEach((p,i)=>a[i+off]=p);out[t]=a;}
     off+=g.length;
   }
   return out;
 }
 
+let hover=null; // {d,k,i} temporary pick while hovering
+const cache={};
 function compute(d){
+  const P=hover&&hover.d===d?{...picks[d],[hover.k]:hover.i}:picks[d];
+  const ck=d+JSON.stringify(Object.entries(P).sort());if(cache[ck])return cache[ck];
   const D=DIV[d];
   const teams=[...new Set(D.played.flat().concat(D.rounds.flat(2)))];
   const baseW={};teams.forEach(t=>baseW[t]=0);
@@ -182,25 +202,31 @@ function compute(d){
   D.played.forEach(([w])=>baseW[w]++);
   const open=[];
   D.rounds.forEach((r,ri)=>r.forEach((g,gi)=>{
-    const p=picks[d][ri+'-'+gi];
+    const p=P[ri+'-'+gi];
     if(p===undefined) open.push(g); else {const w=g[p],l=g[1-p];beat0.add(w+'>'+l);baseW[w]++;}
   }));
-  const N=1<<open.length;
-  const make={},seed={};teams.forEach(t=>{make[t]=0;seed[t]=0;});
+  const N=1<<open.length,n=teams.length,ix={};teams.forEach((t,i)=>ix[t]=i);
+  const M0=new Uint8Array(n*n);beat0.forEach(k=>{const [a,b]=k.split('>');M0[ix[a]*n+ix[b]]=1;});
+  const W0=teams.map(t=>baseW[t]),OA=open.map(g=>ix[g[0]]),OB=open.map(g=>ix[g[1]]);
+  const make=new Float64Array(n),seed=new Float64Array(n);
+  const M=new Uint8Array(n*n),Wc=new Int32Array(n);
+  const has=(a,b)=>M[ix[a]*n+ix[b]]===1;
   for(let bits=0;bits<N;bits++){
-    const beat=new Set(beat0);const w={...baseW};
-    for(let i=0;i<open.length;i++){const [a,b]=open[i];const win=(bits>>i)&1?a:b,lose=win===a?b:a;beat.add(win+'>'+lose);w[win]++;}
-    const levels=[...new Set(teams.map(t=>w[t]))].sort((a,b)=>b-a);
+    M.set(M0);for(let i=0;i<n;i++)Wc[i]=W0[i];
+    for(let i=0;i<open.length;i++){const a=OA[i],b=OB[i];if((bits>>i)&1){M[a*n+b]=1;Wc[a]++;}else{M[b*n+a]=1;Wc[b]++;}}
     let off=0;
-    for(const lv of levels){
-      const g=teams.filter(t=>w[t]===lv);
-      const rp=rankProbs(g,beat);
-      for(const t of g){let s=0,e=0;rp[t].forEach((q,i)=>{if(i+off<4)s+=q;e+=q*(i+off);});make[t]+=s;seed[t]+=e;}
-      off+=g.length;
+    for(let lv=7;lv>=0&&off<n;lv--){
+      let cnt=0,only=-1;for(let i=0;i<n;i++)if(Wc[i]===lv){cnt++;only=i;}
+      if(!cnt)continue;
+      if(cnt===1){if(off<4)make[only]+=1;seed[only]+=off;off++;continue;}
+      const g=[];for(let i=0;i<n;i++)if(Wc[i]===lv)g.push(teams[i]);
+      const rp=rankProbs(g,has);
+      for(const t of g){const j=ix[t];const a=rp[t];for(let i=0;i<a.length;i++){const q=a[i];if(!q)continue;if(i+off<4)make[j]+=q;seed[j]+=q*(i+off);}}
+      off+=cnt;
     }
   }
   const curW={...baseW};
-  return teams.map(t=>({t,p:make[t]/N,s:seed[t]/N,w:curW[t],l:3+D.rounds.length-curW[t]-open.filter(g=>g.includes(t)).length})).sort((a,b)=>b.p-a.p||a.s-b.s);
+  return cache[ck]=teams.map(t=>({t,p:make[ix[t]]/N,s:seed[ix[t]]/N,w:curW[t],l:3+D.rounds.length-curW[t]-open.filter(g=>g.includes(t)).length})).sort((a,b)=>b.p-a.p||a.s-b.s);
 }
 
 const slug=t=>''+t.toLowerCase().replace(/ /g,'-')+'.png';
@@ -220,16 +246,22 @@ function renderGames(){
   document.querySelectorAll('.pick').forEach(b=>b.onclick=()=>{
     const k=b.dataset.k,i=+b.dataset.i;
     if(picks[cur][k]===i) delete picks[cur][k]; else picks[cur][k]=i;
-    save();render();
+    hover=null;save();render();
+  });
+  if(matchMedia('(hover:hover)').matches) document.querySelectorAll('.pick').forEach(b=>{
+    b.onmouseenter=()=>{const k=b.dataset.k,i=+b.dataset.i;if(picks[cur][k]===i)return;hover={d:cur,k,i};b.classList.add('hov');renderOdds();};
+    b.onmouseleave=()=>{if(!hover)return;hover=null;b.classList.remove('hov');renderOdds();};
   });
 }
 function fmt(p){const v=p*100;if(p===1)return'100%';if(p===0)return'0%';if(v>=99.5)return'>99%';if(v<0.5)return'<1%';return Math.round(v)+'%';}
 function renderOdds(){
   const rows=compute(cur);
+  let base=null;if(hover){const h=hover;hover=null;base={};compute(cur).forEach(r=>base[r.t]=r.p);hover=h;}
+  const dl=t=>{if(!base)return'';const v=Math.round((rows.find(r=>r.t===t).p-base[t])*100);return v?`<span class="dl ${v>0?'up':'dn'}">${v>0?'+':''}${v}</span>`:'';};
   let html='<table><tr><th></th><th></th><th>Team</th><th class="c">Record</th><th class="n">Odds</th></tr>';
   rows.forEach((r,i)=>{
     const tag=r.p===1?'<span class="tag c">IN</span>':r.p===0?'<span class="tag e">OUT</span>':'';
-    html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct">${fmt(r.p)}</td></tr>`;
+    html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct">${dl(r.t)}${fmt(r.p)}</td></tr>`;
     if(i===3) html+='<tr class="line"><td colspan="5"><div class="cut">PLAYOFF LINE</div></td></tr>';
   });
   document.getElementById('odds').innerHTML=html+'</table>';
@@ -287,7 +319,14 @@ function renderTies(){
   if(!any) html+='<div class="empty">No ties.</div>';
   el.innerHTML=html;
 }
-function render(){renderGames();renderOdds();renderTies();}
+let warmId=0;
+function warm(){ // precompute hover previews in the background so hovering feels instant
+  const id=++warmId,d=cur,jobs=[];
+  DIV[d].rounds.forEach((r,ri)=>r.forEach((g,gi)=>{const k=ri+'-'+gi;[0,1].forEach(i=>{if(picks[d][k]!==i)jobs.push({d,k,i});});}));
+  const step=()=>{if(id!==warmId||!jobs.length)return;const h=hover;hover=jobs.shift();compute(d);hover=h;setTimeout(step,0);};
+  setTimeout(step,50);
+}
+function render(){renderGames();renderOdds();renderTies();warm();}
 document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));b.classList.add('on');cur=b.dataset.d;render();});
 document.getElementById('reset').onclick=()=>{picks[cur]={};save();render();};
 

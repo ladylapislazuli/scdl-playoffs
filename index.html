@@ -44,11 +44,12 @@ h2 small{font:500 13px Nunito,sans-serif;letter-spacing:0;text-transform:none;co
 table{width:100%;border-collapse:collapse}
 th{font:600 12px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);text-align:left;padding:0 6px 6px;border-bottom:2px solid var(--ink)}
 th.n{text-align:right}
+th.c{text-align:center}
 td{padding:6px;border-bottom:1px solid var(--rule);vertical-align:middle}
 td.rk{font:800 17px 'Geologica',sans-serif;color:var(--mut);width:24px}
 td.lg{width:44px}td.lg img{width:36px;height:36px;object-fit:contain;display:block}
 td.tm{font-weight:600}
-td.rec{font:600 16px 'Chakra Petch',sans-serif;color:var(--mut);white-space:nowrap}
+td.rec{font:600 16px 'Chakra Petch',sans-serif;color:var(--mut);white-space:nowrap;text-align:center;width:76px}
 td.pct{font:800 22px 'Geologica',sans-serif;color:var(--green);text-align:right;width:84px;font-variant-numeric:tabular-nums}
 .bar{height:4px;background:var(--paper2);margin-top:4px}
 .bar i{display:block;height:100%;background:var(--green2)}
@@ -65,11 +66,12 @@ tr.line td{padding:0;border-bottom:none}
 .tie.hot{border-left-color:var(--gold)}
 .tie .hd{font:700 13px 'Chakra Petch',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--mut);margin-bottom:4px}
 .tie .hd b{color:var(--gold)}
-.tie ol{margin:4px 0 0;padding-left:18px}
+.tie ul{margin:4px 0 0;padding:0;list-style:none}
+.tie .fin{font-weight:700;color:var(--green);margin-top:4px}
 .tie li{margin:2px 0}
 .tie .res{font-weight:600;margin-top:4px}
 .tb .empty{color:var(--mut);font-size:14px}
-.ann{list-style:none;margin:8px 0 4px -18px;background:var(--ink);color:var(--paper);padding:10px 12px}
+.ann{list-style:none;margin:8px 0 4px;background:var(--ink);color:var(--paper);padding:10px 12px}
 .ann .ah{font:800 14px 'Geologica',sans-serif;letter-spacing:.03em;text-transform:uppercase;color:var(--mint);margin-bottom:6px}
 .ann ol{margin:0;padding-left:18px}.ann b{color:#fff}
 .ann .small{font-size:12px;opacity:.7;margin-top:6px}
@@ -100,8 +102,8 @@ footer a{color:var(--mint)}
   <img src="scdl.png" alt="SCDL">
   <div>
     <h1>Playoff Race</h1>
-    <div class="kicker">Scuttle Crab Draft League · Season 4.5 River Rush</div>
-    <div class="lede">Four rounds left on 11/22. Top 4 in each division make it. Pick the winners and see who gets in.</div>
+    <div class="kicker">Scuttle Crab Draft League, Season 4.5: River Rush</div>
+    <div class="lede">Regular season wraps up 11/22. Top 4 in each division make playoffs. Click who you think wins.</div>
     <div class="links"><a href="https://docs.google.com/spreadsheets/d/1tdi8ftaQ50sYS92H39YybU29SIPGVSyRNeT_HdOHP8A/edit" target="_blank" rel="noopener">SCDL 4.5 Master Sheet ↗</a><a href="https://docs.google.com/document/d/1oNI0IaDrYB0lQTchahtCT3GR6kcnfoc8l-ZicX9hh78/edit" target="_blank" rel="noopener">Rulebook ↗</a></div>
   </div>
 </header>
@@ -111,16 +113,16 @@ footer a{color:var(--mint)}
   <button class="reset" id="png" style="margin-left:auto">Save as PNG</button><button class="reset" id="reset" style="margin-left:8px">Clear picks</button>
 </nav>
 <main>
-  <section><h2>Remaining games <small id="count"></small></h2><div id="games"></div></section>
+  <section><h2>11/22 games <small id="count"></small></h2><div id="games"></div></section>
   <section><h2>Playoff odds</h2><div id="odds"></div><div class="tb" id="ties"></div></section>
 </main>
-<div class="modal" id="modal"><div class="mbox"><div class="mhd"><span>Your picks</span><button class="reset" id="mclose">Close</button></div><img id="mimg" alt="Playoff picks"><div class="mfoot"><a id="mdl" class="reset" download="scdl-playoff-picks.png">Download</a><span>Or right-click the image → Copy / Save image.</span></div></div></div>
+<div class="modal" id="modal"><div class="mbox"><div class="mhd"><span>Your picks</span><button class="reset" id="mclose">Close</button></div><img id="mimg" alt="Playoff picks"><div class="mfoot"><a id="mdl" class="reset" download="scdl-playoff-picks.png">Download</a><span>Or right-click it to copy or save.</span></div></div></div>
 <footer>
   <h3>Methodology</h3>
   <div class="mcols">
-    <div><b>Unpicked games</b><p>Every game you haven't picked counts as 50/50. The odds cover every possible result.</p></div>
-    <div><b>Ties</b><p>Broken by head-to-head per <a href="https://docs.google.com/document/d/1oNI0IaDrYB0lQTchahtCT3GR6kcnfoc8l-ZicX9hh78/edit" target="_blank" rel="noopener">Rule 4.4</a>, restarting with whoever's still tied.</p></div>
-    <div><b>Win time</b><p>If head-to-head is even, the team with the fastest average win in those head-to-head games ranks higher. No tiebreaker matches. If those games haven't been played yet, the odds treat it as 50/50.</p></div>
+    <div><b>Unpicked games</b><p>Any game you haven't picked is a coin flip. The odds count every possible result.</p></div>
+    <div><b>Ties</b><p>Head-to-head record between the tied teams, per <a href="https://docs.google.com/document/d/1oNI0IaDrYB0lQTchahtCT3GR6kcnfoc8l-ZicX9hh78/edit" target="_blank" rel="noopener">Rule 4.4</a>. If that only splits them into smaller ties, it runs again on each group.</p></div>
+    <div><b>Win time</b><p>Still even? Whoever won their head-to-head games fastest on average ranks higher. No tiebreaker games. Until those games are played, it's a coin flip.</p></div>
   </div>
 </footer>
 </div>
@@ -224,9 +226,9 @@ function renderGames(){
 function fmt(p){const v=p*100;if(p===1)return'100%';if(p===0)return'0%';if(v>=99.5)return'>99%';if(v<0.5)return'<1%';return Math.round(v)+'%';}
 function renderOdds(){
   const rows=compute(cur);
-  let html='<table><tr><th></th><th></th><th>Team</th><th>Rec</th><th class="n">Odds</th></tr>';
+  let html='<table><tr><th></th><th></th><th>Team</th><th class="c">Record</th><th class="n">Odds</th></tr>';
   rows.forEach((r,i)=>{
-    const tag=r.p===1?'<span class="tag c">IN</span>':r.p===0?'<span class="tag e">OUT</span>':'';
+    const tag=r.p===1?'<span class="tag c">CLINCHED</span>':r.p===0?'<span class="tag e">OUT</span>':'';
     html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct">${fmt(r.p)}</td></tr>`;
     if(i===3) html+='<tr class="line"><td colspan="5"><div class="cut">PLAYOFF LINE</div></td></tr>';
   });
@@ -240,37 +242,35 @@ function finalState(d){
   return {teams,w,beat,open};
 }
 // explain resolution of a tied group occupying seeds start..start+n-1
-function explain(group,beat,depth,start){
+const ord=n=>n+(['th','st','nd','rd'][(n%100-20)%10]||['th','st','nd','rd'][n%100]||'th');
+function explain(group,beat,depth){
   const out=[];
   if(group.length===1) return out;
   if(group.length===2){
     const [a,b]=group;const win=beat.has(a+'>'+b)?a:b,lose=win===a?b:a;
-    out.push(`<li>${depth?'Restart with ':''}<b>${win}</b> vs <b>${lose}</b>: ${win} won head-to-head, so ${win} ranks ahead.</li>`);
+    out.push(`<li><b>${win}</b> beat ${lose} head-to-head.</li>`);
     return out;
   }
   const h={};group.forEach(t=>h[t]=group.filter(o=>o!==t&&beat.has(t+'>'+o)).length);
   const n=group.length-1;
   const recs=[...group].sort((x,y)=>h[y]-h[x]).map(t=>`${t} ${h[t]}-${n-h[t]}`).join(', ');
   const vals=[...new Set(Object.values(h))].sort((a,b)=>b-a);
-  out.push(`<li>${depth?'Restart with the teams still tied. ':''}Head-to-head among ${group.join(', ')}: ${recs}.</li>`);
+  out.push(`<li>${depth?'Then ':''}Head-to-head${depth?` between ${group.join(', ')}`:''}: ${recs}</li>`);
   if(vals.length===1){
-    const wins=t=>group.filter(o=>o!==t&&beat.has(t+'>'+o));
     const wt=winTimes(group,beat);
-    const lines=group.map(t=>{const ws=wins(t).map(o=>{const v=GAME_TIMES[t+'>'+o];return `beat ${o} in ${v===undefined?'<i>TBD (11/22)</i>':mmss(v)}`;});return `<b>${t}</b>: ${ws.join(', ')}`;});
-    let res;
-    if(wt){const ord=[...group].sort((a,b)=>wt[a]-wt[b]);res=`Fastest average head-to-head win ranks higher: ${ord.map((t,i)=>`${start+i+1}. ${t} (${mmss(wt[t])})`).join(' · ')}.`;}
-    else res=`Decided by fastest average head-to-head win. Some of these games are on 11/22, so the order isn't known yet. The odds treat it as 50/50 for now.`;
-    out.push(`<li>Head-to-head is even, so it goes to <b>average win time in head-to-head games</b>.</li><li class="ann"><div class="ah">Decided by win time</div><div>${lines.join('<br>')}</div><div style="margin-top:6px">${res}</div></li>`);
+    const lines=[];
+    group.forEach(t=>group.forEach(o=>{if(o!==t&&beat.has(t+'>'+o)){const v=GAME_TIMES[t+'>'+o];lines.push(`${t} over ${o}: ${v===undefined?'<i>TBD (11/22)</i>':mmss(v)}`);}}));
+    const res=wt?'':`<div style="margin-top:6px">Waiting on 11/22 game times. Odds treat it as a coin flip for now.</div>`;
+    out.push(`<li class="ann"><div class="ah">All even. Fastest win takes it</div><div>${lines.join('<br>')}</div>${res}</li>`);
     return out;
   }
-  let off=start;
-  for(const v of vals){const g=group.filter(t=>h[t]===v);if(g.length>1) out.push(...explain(g,beat,depth+1,off));off+=g.length;}
+  for(const v of vals){const g=group.filter(t=>h[t]===v);if(g.length>1) out.push(...explain(g,beat,depth+1));}
   return out;
 }
 function renderTies(){
   const el=document.getElementById('ties');
   const {teams,w,beat,open}=finalState(cur);
-  if(open){el.innerHTML=`<h3>Tiebreakers</h3><div class="empty">Pick all 16 games to see how ties get broken.</div>`;return;}
+  if(open){el.innerHTML=`<h3>Tiebreakers</h3><div class="empty">Pick all 16 games to see the tiebreakers.</div>`;return;}
   const sorted=[...teams].sort((a,b)=>w[b]-w[a]);
   let html='<h3>Tiebreakers</h3>',any=false,start=0;
   const levels=[...new Set(sorted.map(t=>w[t]))];
@@ -278,11 +278,13 @@ function renderTies(){
     const g=sorted.filter(t=>w[t]===lv);const end=start+g.length;
     if(g.length>1){
       any=true;const hot=start<4&&end>4;
-      html+=`<div class="tie ${hot?'hot':''}"><div class="hd">${g.length}-way tie at ${lv}-${7-lv} · seeds ${start+1}–${end}${hot?' · <b>decides the playoff line</b>':''}</div><ol>${explain(g,beat,0,start).join('')}</ol></div>`;
+      const rp=rankProbs(g,beat);const done=g.every(t=>rp[t].every(p=>p===0||p===1));
+      const fin=done?`<li class="fin">${[...g].sort((a,b)=>rp[a].indexOf(1)-rp[b].indexOf(1)).map((t,i)=>`${ord(start+i+1)} ${t}`).join(', ')}</li>`:'';
+      html+=`<div class="tie ${hot?'hot':''}"><div class="hd">Tied at ${lv}-${7-lv}, seeds ${start+1}–${end}${hot?' <b>(playoff spot on the line)</b>':''}</div><ul>${explain(g,beat,0).join('')}${fin}</ul></div>`;
     }
     start=end;
   }
-  if(!any) html+='<div class="empty">No ties. Standings are set by record.</div>';
+  if(!any) html+='<div class="empty">No ties.</div>';
   el.innerHTML=html;
 }
 function render(){renderGames();renderOdds();renderTies();}
@@ -322,7 +324,7 @@ async function exportPNG(){
   fitImg(x,scdl,56,44,120);
   x.font=R('80px');shadowText('PLAYOFF',196,124,C.green,C.mint,4);
   shadowText('PICTURE',196,206,C.green,C.mint,4);
-  x.font=K('700 24px');x.fillStyle=C.mut;x.fillText(`SEASON 4.5 · ${d.toUpperCase()} DIVISION`,200,256);
+  x.font=K('700 24px');x.fillStyle=C.mut;x.fillText(`SEASON 4.5 ${d.toUpperCase()} DIVISION`,200,256);
   x.save();x.globalAlpha=.95;fitImg(x,divlogo,W-250,40,200);x.restore();
   // rows
   let y=300;const X0=56,RW=W-112,RH=96;
@@ -331,7 +333,7 @@ async function exportPNG(){
   if(!fs.open){const sorted=[...fs.teams].sort((a,b)=>fs.w[b]-fs.w[a]);let st=0;
     for(const lv of [...new Set(sorted.map(t=>fs.w[t]))]){const g=sorted.filter(t=>fs.w[t]===lv),en=st+g.length;
       if(g.length>2&&st<4&&en>4){const h={};g.forEach(t=>h[t]=g.filter(o=>o!==t&&fs.beat.has(t+'>'+o)).length);
-        if(new Set(Object.values(h)).size===1) cutLabel=`${g.length}-WAY TIE · DECIDED BY WIN TIME`;}
+        if(new Set(Object.values(h)).size===1) cutLabel=`${g.length}-WAY TIE, DECIDED BY WIN TIME`;}
       st=en;}}
   rows.forEach((r,i)=>{
     const inZone=i<4,out=r.p===0;
@@ -343,7 +345,7 @@ async function exportPNG(){
     x.font=R('34px');x.fillStyle=inZone?'#fff':(out?C.mut:C.ink);x.fillText(r.t.toUpperCase(),X0+196,y+52);
     x.font=K('600 20px');x.fillStyle=inZone?C.mint:C.mut;x.fillText(`${r.w}-${r.l}`,X0+198,y+78);
     x.textAlign='right';
-    if(r.p===1){x.font=R('44px');x.fillStyle='#ffcc00';x.fillText('IN',X0+RW-40,y+62);}
+    if(r.p===1){x.font=R('44px');x.fillStyle='#ffcc00';x.fillText('CLINCHED',X0+RW-40,y+62);}
     else if(out){x.font=R('44px');x.fillStyle=C.red;x.fillText('OUT',X0+RW-40,y+62);}
     else{x.font=R('48px');x.fillStyle=inZone?'#fff':C.ink;x.fillText(fmt(r.p),X0+RW-40,y+64);}
     x.textAlign='left';
@@ -374,7 +376,7 @@ async function exportPNG(){
   x.fillStyle=C.green;x.fillRect(0,H-56,W,56);
   x.font=K('600 18px');x.fillStyle=C.mint;
   const n=Object.keys(picks[d]).length;
-  x.fillText(n<16?`${n}/16 picked · rest count as 50/50`:'All 16 games picked',X0,H-21);
+  x.fillText(n<16?`${n}/16 picked, the rest are coin flips`:'All 16 games picked',X0,H-21);
   x.textAlign='right';x.fillStyle='#fff';x.fillText('SCUTTLE CRAB DRAFT LEAGUE',W-X0,H-21);x.textAlign='left';
   const url=c.toDataURL('image/png');
   document.getElementById('mimg').src=url;document.getElementById('mdl').href=url;

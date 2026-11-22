@@ -102,7 +102,7 @@ footer a{color:var(--mint)}
   <img src="scdl.png" alt="SCDL">
   <div>
     <h1>Playoff Race</h1>
-    <div class="kicker">Scuttle Crab Draft League, Season 4.5: River Rush</div>
+    <div class="kicker">Scuttle Crab Draft League - Season 4.5: River Rush</div>
     <div class="lede">Regular season wraps up 11/22. Top 4 in each division make playoffs. Click who you think wins.</div>
     <div class="links"><a href="https://docs.google.com/spreadsheets/d/1tdi8ftaQ50sYS92H39YybU29SIPGVSyRNeT_HdOHP8A/edit" target="_blank" rel="noopener">SCDL 4.5 Master Sheet ↗</a><a href="https://docs.google.com/document/d/1oNI0IaDrYB0lQTchahtCT3GR6kcnfoc8l-ZicX9hh78/edit" target="_blank" rel="noopener">Rulebook ↗</a></div>
   </div>
@@ -228,7 +228,7 @@ function renderOdds(){
   const rows=compute(cur);
   let html='<table><tr><th></th><th></th><th>Team</th><th class="c">Record</th><th class="n">Odds</th></tr>';
   rows.forEach((r,i)=>{
-    const tag=r.p===1?'<span class="tag c">CLINCHED</span>':r.p===0?'<span class="tag e">OUT</span>':'';
+    const tag=r.p===1?'<span class="tag c">IN</span>':r.p===0?'<span class="tag e">OUT</span>':'';
     html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct">${fmt(r.p)}</td></tr>`;
     if(i===3) html+='<tr class="line"><td colspan="5"><div class="cut">PLAYOFF LINE</div></td></tr>';
   });
@@ -345,7 +345,7 @@ async function exportPNG(){
     x.font=R('34px');x.fillStyle=inZone?'#fff':(out?C.mut:C.ink);x.fillText(r.t.toUpperCase(),X0+196,y+52);
     x.font=K('600 20px');x.fillStyle=inZone?C.mint:C.mut;x.fillText(`${r.w}-${r.l}`,X0+198,y+78);
     x.textAlign='right';
-    if(r.p===1){x.font=R('44px');x.fillStyle='#ffcc00';x.fillText('CLINCHED',X0+RW-40,y+62);}
+    if(r.p===1){x.font=R('44px');x.fillStyle='#ffcc00';x.fillText('IN',X0+RW-40,y+62);}
     else if(out){x.font=R('44px');x.fillStyle=C.red;x.fillText('OUT',X0+RW-40,y+62);}
     else{x.font=R('48px');x.fillStyle=inZone?'#fff':C.ink;x.fillText(fmt(r.p),X0+RW-40,y+64);}
     x.textAlign='left';

@@ -48,7 +48,8 @@ h2 small{font:500 13px Nunito,sans-serif;letter-spacing:0;text-transform:none;co
 .pick.hov{background:#d6ead9;border-color:var(--green)}
 .pick.hov::after{border-color:var(--green);background:var(--mint)}
 .pick.l.hov{opacity:1}
-.dl{font:700 13px 'Chakra Petch',sans-serif;margin-right:6px;vertical-align:4px}
+.dlt{width:44px;padding-left:4px;padding-right:0}
+.dl{font:700 14px 'Chakra Petch',sans-serif}
 .dl.up{color:var(--green2)}
 .dl.dn{color:var(--red)}
 .pick.l img{filter:grayscale(1)}
@@ -258,11 +259,11 @@ function renderOdds(){
   const rows=compute(cur);
   let base=null;if(hover){const h=hover;hover=null;base={};compute(cur).forEach(r=>base[r.t]=r.p);hover=h;}
   const dl=t=>{if(!base)return'';const v=Math.round((rows.find(r=>r.t===t).p-base[t])*100);return v?`<span class="dl ${v>0?'up':'dn'}">${v>0?'+':''}${v}</span>`:'';};
-  let html='<table><tr><th></th><th></th><th>Team</th><th class="c">Record</th><th class="n">Odds</th></tr>';
+  let html='<table><tr><th></th><th></th><th>Team</th><th class="c">Record</th><th class="n">Odds</th><th></th></tr>';
   rows.forEach((r,i)=>{
     const tag=r.p===1?'<span class="tag c">IN</span>':r.p===0?'<span class="tag e">OUT</span>':'';
-    html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct">${dl(r.t)}${fmt(r.p)}</td></tr>`;
-    if(i===3) html+='<tr class="line"><td colspan="5"><div class="cut">PLAYOFF LINE</div></td></tr>';
+    html+=`<tr class="${r.p===0?'out':''}"><td class="rk">${i+1}</td><td class="lg">${L(r.t)}</td><td class="tm">${r.t}${tag}<div class="bar"><i style="width:${r.p*100}%"></i></div></td><td class="rec">${r.w}-${r.l}</td><td class="pct">${fmt(r.p)}</td><td class="dlt">${dl(r.t)}</td></tr>`;
+    if(i===3) html+='<tr class="line"><td colspan="6"><div class="cut">PLAYOFF LINE</div></td></tr>';
   });
   document.getElementById('odds').innerHTML=html+'</table>';
 }

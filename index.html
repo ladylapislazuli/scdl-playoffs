@@ -120,7 +120,7 @@ footer a{color:var(--mint)}
   <div class="mcols">
     <div><b>Unpicked games</b><p>Every game you haven't picked counts as 50/50. The odds cover every possible result.</p></div>
     <div><b>Ties</b><p>Broken by head-to-head per <a href="https://docs.google.com/document/d/1oNI0IaDrYB0lQTchahtCT3GR6kcnfoc8l-ZicX9hh78/edit" target="_blank" rel="noopener">Rule 4.4</a>, restarting with whoever's still tied.</p></div>
-    <div><b>Tiebreaker matches</b><p>If head-to-head can't separate teams, they play tiebreaker matches. The odds treat each one as 50/50.</p></div>
+    <div><b>Win time</b><p>If head-to-head is even, the team with the fastest average win in those head-to-head games ranks higher. No tiebreaker matches. If those games haven't been played yet, the odds treat it as 50/50.</p></div>
   </div>
 </footer>
 </div>
@@ -138,13 +138,31 @@ try{const s=JSON.parse(localStorage.getItem('scdl45flip')||'null');if(s){picks.B
 function save(){try{localStorage.setItem('scdl45flip',JSON.stringify(picks))}catch(e){}}
 
 // tie group -> array of [team, prob it lands at each slot] returned as map team->array(n)
+// head-to-head game lengths (seconds) from Rounds 1-3 match history; 11/22 games get added after they're played
+const GAME_TIMES={"Catboys>Gunkers":2074,"Ghoulblins>Bandits":2369,"Chickens>Mud Newts":2728,"Checkmates>Miners":1739,"Miners>Catboys":1899,"Chickens>Gunkers":1869,"Checkmates>Bandits":1935,"Ghoulblins>Mud Newts":1843,"Bandits>Catboys":1990,"Miners>Gunkers":2343,"Mud Newts>Checkmates":2185,"Ghoulblins>Chickens":1705,"Bandle City>Milkshakes":1904,"Chudmates>Milk":1931,"Globetrotters>Ticks":1529,"Breadwinners>Milk":1789,"Bandle City>Globetrotters":1774,"Duck Donuts>Ticks":1822,"Milkshakes>Chudmates":1834,"Bandle City>Ticks":1642,"Chudmates>Breadwinners":2051,"Globetrotters>Milk":1557,"Duck Donuts>Milkshakes":1603,"Duck Donuts>Breadwinners":1563};
+const mmss=s=>`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
+// avg win time per team over its wins vs the other tied teams; null if any of those games has no time yet
+function winTimes(teams,beat){
+  const out={};
+  for(const t of teams){const ts=[];for(const o of teams){if(o!==t&&beat.has(t+'>'+o)){const v=GAME_TIMES[t+'>'+o];if(v===undefined)return null;ts.push(v);}}
+    out[t]=ts.length?ts.reduce((a,b)=>a+b,0)/ts.length:Infinity;}
+  return out;
+}
 function rankProbs(teams,beat){
   const n=teams.length;
   if(n===1) return {[teams[0]]:[1]};
   const h={};for(const t of teams){let c=0;for(const o of teams) if(o!==t&&beat.has(t+'>'+o))c++;h[t]=c;}
   const vals=[...new Set(Object.values(h))].sort((a,b)=>b-a);
   const out={};
-  if(vals.length===1){for(const t of teams) out[t]=Array(n).fill(1/n);return out;}
+  if(vals.length===1){
+    const wt=winTimes(teams,beat);
+    if(wt){ // all head-to-head win times known: order by fastest average win
+      const tv=[...new Set(teams.map(t=>wt[t]))].sort((a,b)=>a-b);let o=0;
+      for(const v of tv){const g=teams.filter(t=>wt[t]===v);for(const t of g){out[t]=Array(n).fill(0);for(let i=0;i<g.length;i++)out[t][o+i]=1/g.length;}o+=g.length;}
+      return out;
+    }
+    for(const t of teams) out[t]=Array(n).fill(1/n);return out;
+  }
   let off=0;
   for(const v of vals){
     const g=teams.filter(t=>h[t]===v);const sub=rankProbs(g,beat);
@@ -222,37 +240,6 @@ function finalState(d){
   return {teams,w,beat,open};
 }
 // explain resolution of a tied group occupying seeds start..start+n-1
-// avg win time (seconds) from Rounds 1-3 match history
-const WIN_TIMES={
- 'Catboys':[2074],'Ghoulblins':[2369,1843,1705],'Chickens':[2728,1869],'Checkmates':[1739,1935],'Miners':[1899,2343],'Bandits':[1990],'Mud Newts':[2185],'Gunkers':[],
- 'Bandle City':[1904,1774,1642],'Duck Donuts':[1563,1822,1603],'Chudmates':[1931,2051],'Globetrotters':[1529,1557],'Breadwinners':[1789],'Milkshakes':[1834],'Milk':[],'Ticks':[]
-};
-const avgWT=t=>{const a=WIN_TIMES[t]||[];return a.length?a.reduce((x,y)=>x+y,0)/a.length:Infinity;};
-const mmss=s=>s===Infinity?'no wins yet':`${Math.floor(s/60)}:${String(Math.round(s%60)).padStart(2,'0')}`;
-function tbMatches(g0,start){
-  const g=[...g0].sort((a,b)=>avgWT(a)-avgWT(b));
-  const n=g.length,spots=Math.max(0,Math.min(4,start+n)-start),seeds=`seeds ${start+1}–${start+n}`;
-  const order=`<div class="small" style="opacity:.85;margin:0 0 6px">Projected seeding by average win time, lowest first: ${g.map((t,i)=>`${i+1}. ${t} (${mmss(avgWT(t))})`).join(' · ')}</div>`;
-  const [A,B,C,D]=g;let m;
-  if(spots===0||spots===n){
-    m=n===2?`<div><b>${A}</b> vs <b>${B}</b> (Bo1): winner takes seed ${start+1}. Both are ${spots?'in':'out'} either way.</div>`
-           :`<div>Bo1s decide ${seeds} only. Everyone here is ${spots?'in':'out'} either way.</div>`;
-  } else if(n===2){
-    m=`<div><b>${A}</b> vs <b>${B}</b> (Bo1): winner takes the last playoff spot.</div>`;
-  } else if(n===3&&spots===2){
-    m=`<ol><li><b>${B}</b> vs <b>${C}</b> (Bo1). The winner is <b>in</b>.</li><li>The loser plays <b>${A}</b>. The winner takes the <b>last spot</b>.</li></ol>`;
-  } else if(n===3&&spots===1){
-    m=`<ol><li><b>${A}</b> gets the bye.</li><li><b>${B}</b> vs <b>${C}</b> (Bo1).</li><li>The winner plays <b>${A}</b>, and that winner takes the <b>last spot</b>.</li></ol>`;
-  } else if(n===4&&spots===2){
-    m=`<ol><li><b>${A}</b> vs <b>${D}</b> (Bo1). The winner is <b>in</b>.</li><li><b>${B}</b> vs <b>${C}</b> (Bo1). The winner is <b>in</b>.</li></ol>`;
-  } else if(n===4&&spots===1){
-    m=`<ol><li>Semis: <b>${A}</b> vs <b>${D}</b>, <b>${B}</b> vs <b>${C}</b> (Bo1s).</li><li>The winners play a Bo1 final for the <b>last spot</b>.</li></ol>`;
-  } else {
-    m=`<div>${n} teams for ${spots} spot${spots>1?'s':''}. Staff sets the bracket.</div>`;
-  }
-  const foot='<div class="small"><b style="color:var(--mint)">Not final.</b> Average win time decides who gets the better spot, like the bye. These times only cover Rounds 1–3, and the 11/22 games will change them, so the seeding is not locked until the regular season ends. Side selection is a coin flip each game. Played before playoffs.</div>';
-  return `<li class="ann"><div class="ah">Tiebreaker matches${spots>0&&spots<n?` · ${spots} playoff spot${spots>1?'s':''} on the line`:''}</div>${order}${m}${foot}</li>`;
-}
 function explain(group,beat,depth,start){
   const out=[];
   if(group.length===1) return out;
@@ -267,8 +254,13 @@ function explain(group,beat,depth,start){
   const vals=[...new Set(Object.values(h))].sort((a,b)=>b-a);
   out.push(`<li>${depth?'Restart with the teams still tied. ':''}Head-to-head among ${group.join(', ')}: ${recs}.</li>`);
   if(vals.length===1){
-    out.push(`<li>Still tied. Game win % (steps 2 and 3) can't separate them since every game is a Bo1, so this goes to <b>tiebreaker matches</b>.</li>`);
-    out.push(tbMatches(group,start));
+    const wins=t=>group.filter(o=>o!==t&&beat.has(t+'>'+o));
+    const wt=winTimes(group,beat);
+    const lines=group.map(t=>{const ws=wins(t).map(o=>{const v=GAME_TIMES[t+'>'+o];return `beat ${o} in ${v===undefined?'<i>TBD (11/22)</i>':mmss(v)}`;});return `<b>${t}</b>: ${ws.join(', ')}`;});
+    let res;
+    if(wt){const ord=[...group].sort((a,b)=>wt[a]-wt[b]);res=`Fastest average head-to-head win ranks higher: ${ord.map((t,i)=>`${start+i+1}. ${t} (${mmss(wt[t])})`).join(' · ')}.`;}
+    else res=`Decided by fastest average head-to-head win. Some of these games are on 11/22, so the order isn't known yet. The odds treat it as 50/50 for now.`;
+    out.push(`<li>Head-to-head is even, so it goes to <b>average win time in head-to-head games</b>.</li><li class="ann"><div class="ah">Decided by win time</div><div>${lines.join('<br>')}</div><div style="margin-top:6px">${res}</div></li>`);
     return out;
   }
   let off=start;
@@ -309,7 +301,7 @@ function tieLines(d){
     if(g.length>1&&start<4&&end>4){
       const h={};g.forEach(t=>h[t]=g.filter(o=>o!==t&&beat.has(t+'>'+o)).length);
       const unres=new Set(Object.values(h)).size===1&&g.length>2;
-      out.push(`${g.length}-way tie at ${lv}-${7-lv}: ${unres?`tiebreaker matches for ${4-start} spot${4-start>1?'s':''}`:'decided by head-to-head'}`);
+      out.push(`${g.length}-way tie at ${lv}-${7-lv}: ${unres?`decided by win time`:'decided by head-to-head'}`);
     }
     start=end;
   }
@@ -339,7 +331,7 @@ async function exportPNG(){
   if(!fs.open){const sorted=[...fs.teams].sort((a,b)=>fs.w[b]-fs.w[a]);let st=0;
     for(const lv of [...new Set(sorted.map(t=>fs.w[t]))]){const g=sorted.filter(t=>fs.w[t]===lv),en=st+g.length;
       if(g.length>2&&st<4&&en>4){const h={};g.forEach(t=>h[t]=g.filter(o=>o!==t&&fs.beat.has(t+'>'+o)).length);
-        if(new Set(Object.values(h)).size===1) cutLabel=`${g.length}-WAY TIE · TIEBREAKER MATCHES`;}
+        if(new Set(Object.values(h)).size===1) cutLabel=`${g.length}-WAY TIE · DECIDED BY WIN TIME`;}
       st=en;}}
   rows.forEach((r,i)=>{
     const inZone=i<4,out=r.p===0;
